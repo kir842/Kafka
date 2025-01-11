@@ -1,0 +1,55 @@
+https://www.youtube.com/watch?v=O3KtaGcq98A&ab_channel=awsdevopsniche11
+
+https://prometheus.io/
+https://prometheus.io/docs/introdction/overview
+
+Launch Linux EC2 instance
+
+Create Prometheus user (add user in Linux)
+useradd to the root file (etc/sudoers file)
+cd /home/Prometheus
+
+sudo wget https://github.com/prometheus/prometheus/releases/download/v3.1.0/prometheus-3.1.0.linux-amd64.tar.gz
+
+sudo tar -xzvf prometheus-3.1.0.linux-amd64.tar.gz
+
+open port 9090 in security group(EC2 instance Aws)
+
+command to start Prometheus
+./prometheus  --config.file=prometheus.yml
+
+[Prometheus runs on port 9090] telnet localhost 9090
+
+Create Prometheus.service
+
+sudo nano /etc/systemd/system/Prometheus.service
+
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Type=simple
+Restart=on-failure
+
+ExecStart=/home/prometheus/prometheus-3.1.0.linux-amd64/prometheus \
+                    --config.file /home/prometheus/prometheus-3.1.0.linux-amd64/prometheus.yml
+
+   #/usr/local/bin/prometheus \
+   # --config.file /etc/prometheus/prometheus.yml \
+   # --storage.tsdb.path /var/lib/prometheus/ \
+   # --web.console.templates=/etc/prometheus/consoles \
+   # --web.console.libraries=/etc/prometheus/console_libraries
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl start Prometheus
+sudo systemctl status Prometheus
+
+Command to validate Prometheus config file
+
+./promtool check config prometheus.yml

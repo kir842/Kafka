@@ -23,7 +23,7 @@ scp -i abc.pem abc.pem ubuntu@oub-ip:~/.ssh/
 
 nano .profile
 
-eval `ssh-agent` ssh-add /home/ubuntu/.ssh/Pract.pem
+eval `ssh-agent` ssh-add /home/ubuntu/.ssh/abc.pem
 
 -----**** Set swappiness ****-----
 
@@ -320,7 +320,7 @@ tail -f /usr/local/kafka/logs/server.log
 
 ## Create a topic
 
-kafka-topics.sh --zookeeper zk1:2181,zk2:2181,zk3:2181/kafka --create --topic my-topic --replication-factor 3 --partitions 3 
+kafka-topics.sh --zookeeper zk1:2181,zk2:2181,zk3:2181/kafka --create --topic K-topic --replication-factor 1 --partitions 3 
 
 ## Create a producer
 
@@ -338,3 +338,21 @@ kafka-topics.sh --zookeeper zk1:2181,zk2:2181,zk3:2181/kafka --create --topic my
 ## List topics 
 
 kafka-topics.sh --zookeeper zk1:2181,zk2:2181,zk3:2181/kafka --list
+
+## perf-test
+kafka-producer-perf-test.sh  --producer-props acks=all  bootstrap.servers=kf1:9092  --topic my-topic-A --throughput -1 --record-size 1000 --num-records 5000
+
+## Consumer Group list
+
+kafka-consumer-groups.sh --bootstrap-server kf1:9092 --list
+
+## Consumer Group Describe
+
+kafka-consumer-groups.sh --bootstrap-server kf1:9092 --describe --group console-consumer-33753(groupid or name)
+
+##zookeeper Shell Command
+
+$  ls /brokers/ids # Gives the list of active brokers
+$  ls /brokers/topics #Gives the list of topics
+$  get /brokers/ids/0 #Gives more detailed information of the broker id '0'
+
